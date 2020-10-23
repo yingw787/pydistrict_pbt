@@ -1,0 +1,13 @@
+# app dependencies #
+
+# dev dependencies #
+black
+pylint
+ipdb
+
+# test dependencies #
+pytest
+hypothesis
+
+# build dependencies #
+pip-tools
