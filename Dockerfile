@@ -26,11 +26,15 @@ RUN pip3 install pip-tools
 COPY requirements.txt ${WORKDIR}/requirements.txt
 RUN pip3 install -r ${WORKDIR}/requirements.txt
 
-# Update directory permissions.
-RUN chown -R 1000:1000 /app
-
-RUN mkdir /.cache
-RUN chown -R 1000:1000 /.cache
+# Install Watchman (for running 'pyre incremental'):
+# https://facebook.github.io/watchman/docs/install.html
+RUN curl -Ls -o /tmp/watchman.zip https://github.com/facebook/watchman/releases/download/v2020.09.21.00/watchman-v2020.09.21.00-linux.zip
+RUN unzip /tmp/watchman.zip -d /tmp
+RUN mkdir -p /usr/local/var/run/watchman
+RUN cp /tmp/watchman-v2020.09.21.00-linux/bin/* /usr/local/bin
+RUN cp /tmp/watchman-v2020.09.21.00-linux/lib/* /usr/local/lib
+RUN chmod 755 /usr/local/bin/watchman
+RUN chmod 2777 /usr/local/var/run/watchman
 
 # Run commands.
 CMD [ "exec", "\"@\"" ]

@@ -58,7 +58,6 @@ docker-run: docker-build
 		-it \
 		-v $(shell pwd):/app \
 		--net=host \
-		-u $(USER_ID):$(GROUP_ID) \
 		$(DOCKER_IMAGE_NAME):$(APP_VERSION) \
 		bash -c "$(RUN_ARGS)"
 
@@ -82,5 +81,15 @@ update-deps:
 	# Stack Overflow answer: https://stackoverflow.com/a/58864335
 	$(MAKE) docker-run "cd /app && /usr/local/bin/pip-compile --generate-hashes --allow-unsafe --output-file=requirements.txt requirements.in"
 
+# 'watchman' cannot start with unknown user, so cannot pass 1000:1000 into
+# Docker container since it cannot pass users, which means changing files
+# outside of Docker container requires 'sudo'. This target addresses it by
+# periodically resetting permissions to the host user:group.
+#
+# From:
+# https://medium.com/redbubble/running-a-docker-container-as-a-non-root-user-7d2e00f8ee15
+update-permissions:
+	sudo chown -R 1000:1000 $(GIT_REPO_ROOT)
+
 docker-pyre:
-	$(DOCKER) docker-run "pyre"
+	$(MAKE) docker-run "pyre"
