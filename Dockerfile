@@ -26,5 +26,11 @@ RUN pip3 install pip-tools
 COPY requirements.txt ${WORKDIR}/requirements.txt
 RUN pip3 install -r ${WORKDIR}/requirements.txt
 
+# Update directory permissions.
+RUN chown -R 1000:1000 /app
+
+RUN mkdir /.cache
+RUN chown -R 1000:1000 /.cache
+
 # Run commands.
 CMD [ "exec", "\"@\"" ]
