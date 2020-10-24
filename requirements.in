@@ -1,4 +1,5 @@
 # app dependencies #
+pyre-check
 
 # dev dependencies #
 black
