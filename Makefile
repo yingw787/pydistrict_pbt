@@ -10,6 +10,9 @@ export GIT_REPO_ROOT ?= $(shell git rev-parse --show-toplevel)
 
 export DOCKER_IMAGE_NAME ?= pydistrict_pbt
 
+export USER_ID = $(shell id -u $(whoami))
+export GROUP_ID = $(shell id -u $(whoami))
+
 version:
 	@echo '{"Version": "$(APP_VERSION)"}'
 
@@ -55,6 +58,7 @@ docker-run: docker-build
 		-it \
 		-v $(shell pwd):/app \
 		--net=host \
+		-u $(USER_ID):$(GROUP_ID) \
 		$(DOCKER_IMAGE_NAME):$(APP_VERSION) \
 		bash -c "$(RUN_ARGS)"
 
@@ -77,3 +81,6 @@ update-deps:
 	# `--allow-unsafe` for `pip` and `setuptools` alone should be fine. See this
 	# Stack Overflow answer: https://stackoverflow.com/a/58864335
 	$(MAKE) docker-run "cd /app && /usr/local/bin/pip-compile --generate-hashes --allow-unsafe --output-file=requirements.txt requirements.in"
+
+docker-pyre:
+	$(DOCKER) docker-run "pyre"
