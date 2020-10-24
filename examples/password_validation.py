@@ -13,7 +13,7 @@
 import string
 
 
-def password_is_valid(password):
+def password_is_valid(password: str) -> bool:
     """
     @param password
     @return: password is valid
