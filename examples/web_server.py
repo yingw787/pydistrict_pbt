@@ -16,7 +16,7 @@ db_path: str = os.path.join(os.path.dirname(__file__), "web_server.sqlite3")
 
 
 @app.route("/init")
-def init_db() -> dict:
+def init_db():
     db_conn = sqlite3.connect(db_path)
 
     create_table_sql_query = """
@@ -48,7 +48,7 @@ def init_db() -> dict:
 
 
 @app.route("/test")
-def write_sample_input_data() -> dict:
+def write_sample_input_data():
     name = request.args.get("name")
     age = request.args.get("age")
 
