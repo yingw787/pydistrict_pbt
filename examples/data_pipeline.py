@@ -72,6 +72,8 @@ def worker(name: str, interval: int):
     stream_data(deviceLogger, interval)
 
 
+# TODO: Simulate clock jitter / clock skew and merge timestamps in order in a
+# final result.
 if __name__ == "__main__":
     if os.path.exists(log_file):
         os.remove(log_file)
