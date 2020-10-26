@@ -30,6 +30,14 @@ Additionally, the following commands are available:
 
 ### Running password validator
 
+1.  Run:
+
+    ```bash
+    make docker-run "python /app/examples/password_validation.py '$PASSWORD'"
+    ```
+
+    Where `$PASSWORD` is some password, like `aBcD1234@`.
+
 ### Running web server
 
 1.  Run:

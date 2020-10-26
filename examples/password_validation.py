@@ -11,6 +11,7 @@
 # - Contains at least one number
 
 import string
+import sys
 
 
 def password_is_valid(password: str) -> bool:
@@ -34,3 +35,8 @@ def password_is_valid(password: str) -> bool:
         return False
 
     return True
+
+
+if __name__=='__main__':
+    password = sys.argv[1]
+    print(password_is_valid(password))
