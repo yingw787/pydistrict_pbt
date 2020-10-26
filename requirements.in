@@ -1,5 +1,6 @@
 # app dependencies #
 pyre-check
+Flask
 
 # dev dependencies #
 black
