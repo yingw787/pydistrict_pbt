@@ -40,12 +40,8 @@ def init_db():
     db_conn.close()
 
     json_response = {
-        'data': {
-            'type': 'table',
-            'name': 'employees',
-            'sql': response
-        },
-        'status': 200
+        "data": {"type": "table", "name": "employees", "sql": response},
+        "status": 200,
     }
 
     return json_response
@@ -57,28 +53,42 @@ def write_sample_input_data():
     age = request.args.get("age")
 
     if name is None:
-        json_response = {
-            "status": 400,
-            "error": "name not found"
-        }
+        json_response = {"status": 400, "error": "name not found"}
         return json_response
     if age is None:
-        json_response = {
-            "status": 400,
-            "error": "age not found"
-        }
+        json_response = {"status": 400, "error": "age not found"}
         return json_response
 
-    sql_query = """
-    INSERT INTO employees(name, age)
-    VALUES ({name} {age});
+    insert_sql_query = """
+    INSERT INTO employees(id, name, age)
+    VALUES (NULL, '{name}', {age});
     """.format(
-        name=name,
-        age=age
+        name=name, age=age
     )
 
     db_conn = sqlite3.connect(db_path)
+    db_cursor = db_conn.cursor()
 
-    db_conn.execute(sql_query)
+    db_cursor.execute(insert_sql_query)
+    db_conn.commit()
 
+    get_sql_query = """
+    SELECT * FROM employees
+    WHERE id = {id}
+    """.format(
+        id=db_cursor.lastrowid
+    )
+
+    db_cursor.execute(get_sql_query)
+    get_response = list(db_cursor.fetchone())
+    db_cursor.close()
     db_conn.close()
+
+    (resp_id, resp_name, resp_age) = get_response
+
+    json_response = {
+        "data": {"row_id": resp_id, "name": resp_name, "age": resp_age},
+        "status": 200,
+    }
+
+    return json_response
