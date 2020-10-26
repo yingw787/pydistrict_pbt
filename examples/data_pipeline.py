@@ -28,6 +28,9 @@ class Formatter(logging.Formatter):
         return pytz.utc.localize(dt)
 
     def formatTime(self, record, datefmt=None) -> str:
+        # Introduce clock jitter / clock skew to simulate having multiple
+        # devices and multiple clocks / network latency.
+        time.sleep(random.random())
         dt = self.converter(record.created)
         if datefmt:
             s = dt.strftime(datefmt)
@@ -72,14 +75,10 @@ def worker(name: str, interval: int):
     stream_data(deviceLogger, interval)
 
 
-# TODO: Simulate clock jitter / clock skew and merge timestamps in order in a
-# final result.
 if __name__ == "__main__":
     if os.path.exists(log_file):
         os.remove(log_file)
 
-    processOne = multiprocessing.Process(target=worker, args=("device1", 2))
-    processTwo = multiprocessing.Process(target=worker, args=("device2", 3))
-
-    processOne.start()
-    processTwo.start()
+    for idx in range(2):
+        process = multiprocessing.Process(target=worker, args=(f"device{idx}", 1))
+        process.start()
