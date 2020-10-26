@@ -18,7 +18,8 @@ db_path: str = os.path.join(os.path.dirname(__file__), "web_server.sqlite3")
 @app.route("/init")
 def init_db():
     # Ensure db/table will be fresh upon init
-    os.remove(db_path)
+    os.path.exists(db_path):
+        os.remove(db_path)
 
     db_conn = sqlite3.connect(db_path)
 

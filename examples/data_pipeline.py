@@ -10,8 +10,32 @@ import os
 import random
 import time
 
+import pytz
+
 
 log_file: str = os.path.join(os.path.dirname(__file__), "data_pipeline.txt")
+
+
+class Formatter(logging.Formatter):
+    """
+    TZ-aware logging.Formatter.
+    From: https://stackoverflow.com/a/47104004/1497211
+    """
+
+    def converter(self, timestamp: str) -> datetime.datetime:
+        dt = datetime.datetime.fromtimestamp(timestamp)
+        return pytz.utc.localize(dt)
+
+    def formatTime(self, record, datefmt=None) -> str:
+        dt = self.converter(record.created)
+        if datefmt:
+            s = dt.strftime(datefmt)
+        else:
+            try:
+                s = dt.isoformat(timespec="milliseconds")
+            except TypeError:
+                s = dt.isoformat()
+            return s
 
 
 def get_logger() -> logging.Logger:
@@ -23,8 +47,8 @@ def get_logger() -> logging.Logger:
 
     logfmt = '{"timestamp": "%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'
 
-    stream_formatter = logging.Formatter(logfmt)
-    file_formatter = logging.Formatter(logfmt)
+    stream_formatter = Formatter(logfmt)
+    file_formatter = Formatter(logfmt)
 
     stream_handler.setFormatter(stream_formatter)
     file_handler.setFormatter(file_formatter)
