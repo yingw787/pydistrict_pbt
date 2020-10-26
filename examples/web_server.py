@@ -12,11 +12,11 @@ import sqlite3
 
 
 app = Flask(__name__)
-db_path = os.path.join(os.path.dirname(__file__), "web_server.sqlite3")
+db_path: str = os.path.join(os.path.dirname(__file__), "web_server.sqlite3")
 
 
 @app.route("/init")
-def init_db():
+def init_db() -> dict:
     db_conn = sqlite3.connect(db_path)
 
     create_table_sql_query = """
@@ -48,7 +48,7 @@ def init_db():
 
 
 @app.route("/test")
-def write_sample_input_data():
+def write_sample_input_data() -> dict:
     name = request.args.get("name")
     age = request.args.get("age")
 
