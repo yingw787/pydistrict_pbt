@@ -11,17 +11,14 @@ import random
 import time
 
 
-log_file = os.path.join(
-    os.path.dirname(__file__),
-    'data_pipeline.txt'
-)
+log_file: str = os.path.join(os.path.dirname(__file__), "data_pipeline.txt")
 
 
 def get_logger() -> logging.Logger:
-    logger = logging.Logger()
+    logger = logging.Logger(__name__)
     logger.setLevel(logging.DEBUG)
 
-    file_handler = logging.FileFormatter(log_file)
+    file_handler = logging.FileHandler(log_file)
     stream_handler = logging.StreamHandler()
 
     logfmt = '{"timestamp": "%(asctime)s", "name": "%(name)s", "level": "%(levelname)s", "message": "%(message)s"}'
@@ -45,8 +42,9 @@ def stream_data(logger: logging.Logger):
         time.sleep(1)
 
 
-if __name__=='__main__':
-    os.remove(log_file)
+if __name__ == "__main__":
+    if os.path.exists(log_file):
+        os.remove(log_file)
 
-    logger = get_logger()
+    logger: logging.Logger = get_logger()
     stream_data(logger)
