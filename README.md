@@ -36,7 +36,8 @@ Additionally, the following commands are available:
     make docker-run "python /app/examples/password_validation.py '$PASSWORD'"
     ```
 
-    Where `$PASSWORD` is some password, like `aBcD1234@`.
+    Where `$PASSWORD` is some password, like `aBcD1234@`. You should see `False`
+    or `True` printed to the console.
 
 ### Running web server
 
@@ -54,6 +55,9 @@ Additionally, the following commands are available:
     curl 'localhost:5000/init'
     curl 'localhost:5000/test?name=Ted&age=25'
     ```
+
+    Both valid + invalid inputs should return a JSON response, with a status
+    code and either an error message or some amount of data.
 
 ### Running data pipeline
 
