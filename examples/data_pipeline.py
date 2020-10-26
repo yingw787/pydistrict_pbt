@@ -38,7 +38,7 @@ class Formatter(logging.Formatter):
             return s
 
 
-def get_logger() -> logging.Logger:
+def get_logger(name: str) -> logging.Logger:
     logger = logging.Logger(__name__)
     logger.setLevel(logging.DEBUG)
 
@@ -59,16 +59,16 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def stream_data(logger: logging.Logger):
+def stream_data(logger: logging.Logger, interval: int):
     while True:
         random_temp = random.randint(100, 200)
         logger.info(f"Temperature is now {random_temp}.")
-        time.sleep(1)
+        time.sleep(interval)
 
 
 if __name__ == "__main__":
     if os.path.exists(log_file):
         os.remove(log_file)
 
-    logger: logging.Logger = get_logger()
-    stream_data(logger)
+    deviceOneLogger: logging.Logger = get_logger('device1')
+    stream_data(deviceOneLogger, 2)
