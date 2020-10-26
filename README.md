@@ -25,3 +25,45 @@ Additionally, the following commands are available:
 
 - `update-deps`: Update Python-specific app/test/tooling dependencies using
   `pip-compile`.
+
+## Running source code
+
+### Running password validator
+
+### Running web server
+
+1.  Run:
+
+    ```bash
+    make docker-web-server
+    ```
+
+    This should create a running Flask application that accepts URL parameters
+    and writes them to a database `web_server.sqlite3`. To call the API
+    endpoint, run in a separate terminal:
+
+    ```bash
+    curl 'localhost:5000/init'
+    curl 'localhost:5000/test?name=Ted&age=25'
+    ```
+
+### Running data pipeline
+
+1.  Run:
+
+    ```bash
+    make docker-data-pipeline
+    ```
+
+    This should create a never-ending process that creates log file
+    `${GIT_REPO_ROOT}/examples/data_pipeline.txt`, and print out log messages to
+    both stdout and the log file.
+
+    Note that while for each device, log messages are ordered, log messages for
+    the total body of stdout / file are out-of-order. This is accomplished by
+    adding `time.sleep(random.random())` in the `Formatter` class, where source
+    code has access to the point where `logging` generates the timestamp, but
+    does not release it. This is to simulate clock jitter / skew and / or
+    network latency and other forms of delays.
+
+## Running tests
