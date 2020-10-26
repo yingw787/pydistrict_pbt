@@ -1,6 +1,7 @@
 # app dependencies #
 pyre-check
 Flask
+pytz
 
 # dev dependencies #
 black
