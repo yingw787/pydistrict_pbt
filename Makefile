@@ -110,3 +110,9 @@ docker-web-server: docker-build
 		--net=host \
 		$(DOCKER_IMAGE_NAME):$(APP_VERSION) \
 		bash -c "flask run"
+
+docker-data-pipeline: docker-build
+	$(MAKE) docker-typecheck || true
+	$(MAKE) docker-autofmt || true
+
+	$(MAKE) docker-run "python /app/examples/data_pipeline.py"
