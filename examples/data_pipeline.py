@@ -6,6 +6,7 @@
 
 import datetime
 import logging
+import multiprocessing
 import os
 import random
 import time
@@ -39,7 +40,7 @@ class Formatter(logging.Formatter):
 
 
 def get_logger(name: str) -> logging.Logger:
-    logger = logging.Logger(__name__)
+    logger = logging.Logger(name)
     logger.setLevel(logging.DEBUG)
 
     file_handler = logging.FileHandler(log_file)
@@ -66,9 +67,17 @@ def stream_data(logger: logging.Logger, interval: int):
         time.sleep(interval)
 
 
+def worker(name: str, interval: int):
+    deviceLogger: logging.Logger = get_logger(name)
+    stream_data(deviceLogger, interval)
+
+
 if __name__ == "__main__":
     if os.path.exists(log_file):
         os.remove(log_file)
 
-    deviceOneLogger: logging.Logger = get_logger('device1')
-    stream_data(deviceOneLogger, 2)
+    processOne = multiprocessing.Process(target=worker, args=("device1", 2))
+    processTwo = multiprocessing.Process(target=worker, args=("device2", 3))
+
+    processOne.start()
+    processTwo.start()
