@@ -91,5 +91,22 @@ update-deps:
 update-permissions:
 	sudo chown -R 1000:1000 $(GIT_REPO_ROOT)
 
-docker-pyre:
-	$(MAKE) docker-run "pyre"
+docker-typecheck:
+	$(MAKE) docker-run "pyre check"
+
+docker-autofmt:
+	$(MAKE) docker-run "black --target-version py38 --verbose /app/examples"
+
+docker-web-server: docker-build
+	$(MAKE) docker-typecheck || true
+	$(MAKE) docker-autofmt || true
+
+	docker run \
+		--rm \
+		-it \
+		-e FLASK_APP=/app/examples/web_server.py \
+		-e FLASK_ENV=development \
+		-v $(shell pwd):/app \
+		--net=host \
+		$(DOCKER_IMAGE_NAME):$(APP_VERSION) \
+		bash -c "flask run"
