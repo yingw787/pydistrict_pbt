@@ -29,8 +29,14 @@ class Formatter(logging.Formatter):
 
     def formatTime(self, record, datefmt=None) -> str:
         # Introduce clock jitter / clock skew to simulate having multiple
-        # devices and multiple clocks / network latency.
+        # devices and multiple clocks / network latency. Need to add the jitter
+        # here in the source code since by using `logging` the timestamp is
+        # generated right before data is released to stdout/file, and class
+        # `Formatter` is the only middleware inserted into the logger that can
+        # access timestamps after they are generated but before they are
+        # released.
         time.sleep(random.random())
+
         dt = self.converter(record.created)
         if datefmt:
             s = dt.strftime(datefmt)
