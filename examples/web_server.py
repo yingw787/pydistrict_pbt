@@ -17,6 +17,9 @@ db_path: str = os.path.join(os.path.dirname(__file__), "web_server.sqlite3")
 
 @app.route("/init")
 def init_db():
+    # Ensure db/table will be fresh upon init
+    os.remove(db_path)
+
     db_conn = sqlite3.connect(db_path)
 
     create_table_sql_query = """
@@ -69,8 +72,15 @@ def write_sample_input_data():
     db_conn = sqlite3.connect(db_path)
     db_cursor = db_conn.cursor()
 
-    db_cursor.execute(insert_sql_query)
-    db_conn.commit()
+    try:
+        db_cursor.execute(insert_sql_query)
+        db_conn.commit()
+    except sqlite3.IntegrityError as e:
+        json_response = {
+            "status": 400,
+            "error": "Integrity failure upon data insertion",
+        }
+        return json_response
 
     get_sql_query = """
     SELECT * FROM employees
