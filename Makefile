@@ -116,3 +116,9 @@ docker-data-pipeline: docker-build
 	$(MAKE) docker-autofmt || true
 
 	$(MAKE) docker-run "python /app/examples/data_pipeline.py"
+
+docker-pytest:
+	$(MAKE) docker-typecheck || true
+	$(MAKE) docker-autofmt || true
+
+	$(MAKE) docker-run "pytest --hypothesis-show-statistics"
