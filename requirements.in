@@ -11,6 +11,8 @@ ipdb
 # test dependencies #
 pytest
 hypothesis
+pytest-flask
+pytest-xdist
 
 # build dependencies #
 pip-tools
