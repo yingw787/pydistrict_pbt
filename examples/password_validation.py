@@ -37,6 +37,6 @@ def password_is_valid(password: str) -> bool:
     return True
 
 
-if __name__=='__main__':
+if __name__ == "__main__":
     password = sys.argv[1]
     print(password_is_valid(password))
