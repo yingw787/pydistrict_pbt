@@ -36,5 +36,15 @@ RUN cp /tmp/watchman-v2020.09.21.00-linux/lib/* /usr/local/lib
 RUN chmod 755 /usr/local/bin/watchman
 RUN chmod 2777 /usr/local/var/run/watchman
 
+# Setup misc directories.
+RUN mkdir ${WORKDIR}/.hypothesis
+RUN chown 1000:1000 ${WORKDIR}/.hypothesis
+
+RUN mkdir ${WORKDIR}/.pyre
+RUN chown 1000:1000 ${WORKDIR}/.pyre
+
+RUN mkdir ${WORKDIR}/.pytest_cache
+RUN chown 1000:1000 ${WORKDIR}/.pytest_cache
+
 # Run commands.
 CMD [ "exec", "\"@\"" ]
