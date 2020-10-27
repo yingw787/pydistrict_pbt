@@ -1,3 +1,5 @@
 .pyre/
 *.sqlite3
 */data_pipeline.txt
+.hypothesis
+.pytest_cache
