@@ -7,6 +7,7 @@
 import os
 
 from flask import Flask
+from flask import escape
 from flask import request
 import sqlite3
 
@@ -53,7 +54,7 @@ def init_db():
 
 @app.route("/test")
 def write_sample_input_data():
-    name = request.args.get("name")
+    name = escape(request.args.get("name"))
     age = request.args.get("age")
 
     if name is None:
