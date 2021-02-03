@@ -32,12 +32,9 @@ def test_test_returns_ok_with_params(client):
 
 
 # `hypothesis` testing.
-@given(st.from_regex(r"(\W+){1,}"), st.integers().filter(lambda x: x >= 18))
+@given(st.from_regex(r"\A\d{1,}\Z"), st.integers().filter(lambda x: x >= 18))
 def test_test_returns_ok_with_arbitrary_inputs(client, name, age):
-    note("name is: %r" % name)
-    note("age is: %r" % age)
-
-    url_string = urllib.parse.quote(f"/test?name={name}&age={age}")
+    url_string = f"/test?name={urllib.parse.quote(name.encode('utf-8'))}&age={age}"
     response = client.get(url_string)
     json_response = json.loads(response.data)
     assert json_response.get("status") == 200
